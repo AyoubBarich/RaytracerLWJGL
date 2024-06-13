@@ -1,8 +1,8 @@
 package org.engine.graph;
 
 
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.system.MemoryUtil.memFree;
 
 public class Mesh {
 
@@ -18,23 +17,18 @@ public class Mesh {
     private int vaoId;
     private int posVboId;
     private int idxVboId;
+
+    private int colorVboId;
+
     private List<Integer> vboIdList;
 
-    public Mesh(float[] positions, int[] indices ) {
+    public Mesh(float[] positions, int[] indices ,float[] colors) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
 
             vboIdList = new ArrayList<>();
             this.numVertices = indices.length;
             vaoId = glGenVertexArrays();
             glBindVertexArray(vaoId);
-
-            //Indicies VBO
-            idxVboId = glGenBuffers();
-            IntBuffer indiciesBuffer  = MemoryUtil.memAllocInt(indices.length);
-            indiciesBuffer.put(indices).flip();
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,idxVboId);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER,indiciesBuffer,GL_STATIC_DRAW);
-            memFree(indiciesBuffer);
 
 
             // Positions VBO
@@ -47,23 +41,44 @@ public class Mesh {
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
+
+
+            //Color VBO
+
+            colorVboId = glGenBuffers();
+            vboIdList.add(colorVboId);
+            FloatBuffer colorsBuffer = stack.callocFloat(colors.length);
+            colorsBuffer.put(0,colors);
+            glBindBuffer(GL_ARRAY_BUFFER,colorVboId);
+            glBufferData(GL_ARRAY_BUFFER,colorsBuffer,GL_STATIC_DRAW);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1,3,GL_FLOAT,false,0,0);
+
+
+
+            //Indicies VBO
+            idxVboId = glGenBuffers();
+            vboIdList.add(idxVboId);
+            IntBuffer indiciesBuffer  = stack.callocInt(indices.length);
+            indiciesBuffer.put(0,indices);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,idxVboId);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,indiciesBuffer,GL_STATIC_DRAW);
+
+
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
+
+
         }
+
     }
 
 
 
+
+
     public void cleanup() {
-        glDisableVertexAttribArray(0);
-
-        // Delete the VBOs
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(posVboId);
-        glDeleteBuffers(idxVboId);
-
-        // Delete the VAO
-        glBindVertexArray(0);
+        vboIdList.forEach(GL30::glDeleteBuffers);
         glDeleteVertexArrays(vaoId);
     }
 

@@ -24,9 +24,18 @@ public class Main implements GameLogicInterface {
                 -0.5f, -0.5f, 0.0f,
                 0.5f, 0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f
+
         };
         int[] indicies = new int[]{0,2,1,1,2,3};
-        Mesh mesh = new Mesh(positions,indicies);
+        float[] colors = new float[]{
+                0.5f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.5f, 0.5f,
+        };
+
+
+        Mesh mesh = new Mesh(positions,indicies,colors);
         scene.addMesh("quad", mesh);
     }
 

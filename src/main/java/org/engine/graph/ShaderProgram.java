@@ -42,6 +42,7 @@ public class ShaderProgram {
     }
 
     protected int createShader(String shaderCode, int shaderType) {
+
         int shaderId = glCreateShader(shaderType);
         if (shaderId == 0) {
             throw new RuntimeException("Error creating shader. Type: " + shaderType);
