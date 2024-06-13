@@ -20,10 +20,10 @@ public class Main implements GameLogicInterface {
     @Override
     public void init(Window window, Scene scene, Render render) {
         float[] positions = new float[]{
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
+                -0.5f, 0.5f, -10.0f,
+                -0.5f, -0.5f, -10.0f,
+                0.5f, 0.5f, -10.0f,
+                0.5f, -0.5f, -10.0f
 
         };
         int[] indicies = new int[]{0,2,1,1,2,3};

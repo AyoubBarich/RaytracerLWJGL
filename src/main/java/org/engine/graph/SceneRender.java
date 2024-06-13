@@ -9,13 +9,14 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class SceneRender {
     private ShaderProgram shaderProgram;
+    private UniformMap uniformMap;
 
     public SceneRender() {
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/scene.vert", GL_VERTEX_SHADER));
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/scene.frag", GL_FRAGMENT_SHADER));
-
         shaderProgram = new ShaderProgram(shaderModuleDataList);
+        createUniforms();
     }
 
     public void cleanup() {
@@ -27,6 +28,7 @@ public class SceneRender {
 
         scene.getMeshMap().values().forEach(mesh -> {
                     glBindVertexArray(mesh.getVaoId());
+                    uniformMap.setUniform("projectionMatrix",scene.getProjectionMatrix());
                     glDrawElements(GL_TRIANGLES, mesh.getNumVertices(),GL_UNSIGNED_INT,0);
                 }
         );
@@ -35,4 +37,9 @@ public class SceneRender {
 
         shaderProgram.unbind();
     }
+    public void createUniforms(){
+        uniformMap = new UniformMap(shaderProgram.getProgramId());
+        uniformMap.createUniform("projectionMatrix");
+    }
+
 }
