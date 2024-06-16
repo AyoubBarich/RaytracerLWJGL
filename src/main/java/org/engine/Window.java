@@ -106,7 +106,7 @@ public class Window {
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
-
+    public boolean isMousePressed(int buttonCode){return  glfwGetMouseButton(windowHandle,buttonCode)==GLFW_PRESS;}
     public void keyCallBack(int key, int action) {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
             glfwSetWindowShouldClose(windowHandle, true); // We will detect this in the rendering loop

@@ -20,7 +20,7 @@ public class PPMGenerator {
 
                     for (int j = 0; j < img_width; j++) {
 
-                        double r = (double) j / (img_width - 1), g = (double) i / (img_height - 1), b = 0.0;
+                        double r = (double) j / (img_width - 1), g = (double) i / (img_height - 1), b =  (double) i / (img_height - 1);
 
                         int scaled_r = (int) (255.999 * r), scaled_g = (int) (255.999 * g), scaled_b = (int) (255.999 * b);
                         String outputRow = scaled_r + " " + scaled_g + " " + scaled_b + "\n";
@@ -37,4 +37,5 @@ public class PPMGenerator {
 
 
     }
+    public static void main(String[] args) throws IOException {PPMGenerator.generate(255,255,"TestYassine.ppm");}
 }
